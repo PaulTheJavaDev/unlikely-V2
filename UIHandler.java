@@ -60,6 +60,7 @@ public class UIHandler {
         new stuff to be added:
         -dices and cards
         -dialog + text animations (idk how to do that yet)
+        -more evil clown + death screen
         */
     }
 }
