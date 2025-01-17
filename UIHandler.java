@@ -56,7 +56,11 @@ public class UIHandler {
 
         frame.setVisible(true);
 
-        //new stuff to be added:
+        /*
+        new stuff to be added:
+        -dices and cards
+        -dialog + text animations (idk how to do that yet)
+        */
     }
 }
 
