@@ -55,6 +55,8 @@ public class UIHandler {
         layeredPane.add(bloodyTableLabel, JLayeredPane.PALETTE_LAYER);
 
         frame.setVisible(true);
+
+        //new stuff to be added:
     }
 }
 
