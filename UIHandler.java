@@ -6,12 +6,14 @@ public class UIHandler {
     static int screen_height = 800;
     static int screen_width = 1200;
 
+    //for testing purposes there
     public static void main(String[] args) {
         new UIHandler();
     }
 
     public UIHandler() {
 
+        //frame creation
         JFrame frame = new JFrame("Unlikely V2");
         frame.setSize(screen_width, screen_height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
