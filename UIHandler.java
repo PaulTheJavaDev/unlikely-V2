@@ -3,21 +3,23 @@ import java.awt.*;
 
 public class UIHandler {
 
-    static int screen_height = 800;
-    static int screen_width = 1200;
+    /*
+    changes: made screen variables final
+    -added a background + remade the clown
+     */
+    static final int screen_height = 800;
+    static final int screen_width = 1200;
 
-    //for testing purposes there
     public static void main(String[] args) {
         new UIHandler();
     }
 
     public UIHandler() {
 
-        //frame creation
         JFrame frame = new JFrame("Unlikely V2");
         frame.setSize(screen_width, screen_height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(true);
+        frame.setResizable(false); //only true for testing cases
 
         // Create a custom JPanel for the background
         JPanel backgroundPanel = new JPanel() {
@@ -55,13 +57,6 @@ public class UIHandler {
         layeredPane.add(bloodyTableLabel, JLayeredPane.PALETTE_LAYER);
 
         frame.setVisible(true);
-
-        /*
-        new stuff to be added:
-        -dices and cards
-        -dialog + text animations (idk how to do that yet)
-        -more evil clown + death screen
-        */
     }
 }
 
