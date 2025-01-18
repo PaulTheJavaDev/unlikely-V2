@@ -57,6 +57,12 @@ public class UIHandler {
         layeredPane.add(bloodyTableLabel, JLayeredPane.PALETTE_LAYER);
 
         frame.setVisible(true);
+
+        /* new stuff to be added: 
+        -dices and cards 
+        -dialog + text animations (idk how to do that yet) 
+        -more evil clown + death screen 
+        */
     }
 }
 
