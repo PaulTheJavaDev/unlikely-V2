@@ -53,55 +53,69 @@ public class UIHandler {
         bloodyTableLabel.setBounds(clownX, clownY + 160, 382, 377);
 
         //Load dice image
+        /*
         JLabel diceLabel = createInteractiveLabel(
                 "src/images/diceNormal.png",
                 "src/images/diceHover.png",
                 clownX + 40, clownY + 125,
                 "Dice clicked");
+         */
 
-        //Load card stack image
-        JLabel cardStackLabel = createInteractiveLabel(
-                "src/images/cardStackNormal.png",
-                "src/images/cardStackHover.png",
-                clownX + 200, clownY + 125,
-                "Cards clicked");
+        //Setup Dice Icon
+        ImageIcon normalIconDice = new ImageIcon("src/images/diceNormal.png");
+        ImageIcon hoverIconDice = new ImageIcon("src/images/diceHover.png");
+        JLabel diceLabel = new JLabel(normalIconDice);
+        diceLabel.setBounds(clownX + 100, clownY + 125, normalIconDice.getIconWidth(), normalIconDice.getIconHeight());
+
+        //Setup Cards Icon
+        ImageIcon normalIconCardStack = new ImageIcon("src/images/cardStackNormal.png");
+        ImageIcon hoverIconCardStack = new ImageIcon("src/images/cardStackHover.png");
+        JLabel cardStackLabel = new JLabel(normalIconCardStack);
+        cardStackLabel.setBounds(clownX + 200, clownY + 125, normalIconCardStack.getIconWidth(), normalIconCardStack.getIconHeight());
+
+        //Adding MouseListener to
+        cardStackLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("debugMessage");
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                cardStackLabel.setIcon(hoverIconCardStack);
+                cardStackLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                cardStackLabel.setIcon(normalIconCardStack);
+                cardStackLabel.setCursor(Cursor.getDefaultCursor());
+            }
+        });
+
+        diceLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("debugMessage of the Dice");
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                diceLabel.setIcon(hoverIconDice);
+                diceLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                diceLabel.setIcon(normalIconDice);
+                diceLabel.setCursor(Cursor.getDefaultCursor());
+            }
+        });
 
         //Adding elements with Z-index
         layeredPane.add(evilClownIconLabel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(bloodyTableLabel, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(diceLabel, JLayeredPane.PALETTE_LAYER, 0);
         layeredPane.add(cardStackLabel, JLayeredPane.PALETTE_LAYER, 1);
-    }
-
-    private JLabel createInteractiveLabel(String normalImagePath, String hoverImagePath, int x, int y, String debugMessage) {
-        // Load icons
-        ImageIcon normalIcon = new ImageIcon(normalImagePath);
-        ImageIcon hoverIcon = new ImageIcon(hoverImagePath);
-
-        // Create JLabel
-        JLabel label = new JLabel(normalIcon);
-        label.setBounds(x, y, normalIcon.getIconWidth(), normalIcon.getIconHeight());
-
-        // Add MouseListener
-        label.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                System.out.println(debugMessage);
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                label.setIcon(hoverIcon);
-                label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                label.setIcon(normalIcon);
-                label.setCursor(Cursor.getDefaultCursor());
-            }
-        });
-
-        return label;
     }
 }
