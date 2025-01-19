@@ -8,6 +8,9 @@ public class UIHandler {
     static final int screen_height = 800;
     static final int screen_width = 1200;
 
+    private boolean cardsDrawn = false; // Tracks if cards have been drawn in the round
+    private boolean dicesRolled = false; // Tracks if dices have been rolled in the round
+
     public static void main(String[] args) {
         new UIHandler();
     }
@@ -19,28 +22,25 @@ public class UIHandler {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false); // Only true for testing cases
 
-        //Create a custom JPanel for the background (I definitely wrote this)
         JPanel backgroundPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon backgroundIcon = new ImageIcon("src/images/background.png"); //Update with your background image path
+                ImageIcon backgroundIcon = new ImageIcon("src/images/background.png");
                 g.drawImage(backgroundIcon.getImage(), 0, 0, screen_width, screen_height, this);
             }
         };
-        backgroundPanel.setLayout(null); //No Layout Manager for positioning things on my own
+        backgroundPanel.setLayout(null);
         frame.setContentPane(backgroundPanel);
 
         JLayeredPane layeredPane = frame.getLayeredPane();
-
-        //Load and position the UI elements
         setupUIElements(layeredPane);
 
         frame.setVisible(true);
     }
 
     private void setupUIElements(JLayeredPane layeredPane) {
-        //Load evil clown image
+        // Load evil clown image
         ImageIcon evilClownIcon = new ImageIcon("src/images/evilClown.png");
         JLabel evilClownIconLabel = new JLabel(evilClownIcon);
 
@@ -48,36 +48,38 @@ public class UIHandler {
         int clownY = (screen_height - evilClownIcon.getIconHeight()) / 2;
         evilClownIconLabel.setBounds(clownX, clownY - 200, evilClownIcon.getIconWidth(), evilClownIcon.getIconHeight());
 
-        //Load bloody table image
+        // Load bloody table image
         JLabel bloodyTableLabel = new JLabel(new ImageIcon("src/images/bloodyTable1.png"));
         bloodyTableLabel.setBounds(clownX, clownY + 160, 382, 377);
 
-        //Load dice image
-        /*
-        JLabel diceLabel = createInteractiveLabel(
-                "src/images/diceNormal.png",
-                "src/images/diceHover.png",
-                clownX + 40, clownY + 125,
-                "Dice clicked");
-         */
-
-        //Setup Dice Icon
+        // Setup Dice Icon
         ImageIcon normalIconDice = new ImageIcon("src/images/diceNormal.png");
         ImageIcon hoverIconDice = new ImageIcon("src/images/diceHover.png");
         JLabel diceLabel = new JLabel(normalIconDice);
         diceLabel.setBounds(clownX + 100, clownY + 125, normalIconDice.getIconWidth(), normalIconDice.getIconHeight());
 
-        //Setup Cards Icon
+        // Setup Cards Icon
         ImageIcon normalIconCardStack = new ImageIcon("src/images/cardStackNormal.png");
         ImageIcon hoverIconCardStack = new ImageIcon("src/images/cardStackHover.png");
         JLabel cardStackLabel = new JLabel(normalIconCardStack);
         cardStackLabel.setBounds(clownX + 200, clownY + 125, normalIconCardStack.getIconWidth(), normalIconCardStack.getIconHeight());
 
-        //Adding MouseListener to
+        // Add a big dice button
+        JButton bigDiceButton = new JButton("Roll Big Dice");
+        bigDiceButton.setBounds(clownX + 350, clownY + 125, 150, 50);
+        bigDiceButton.setEnabled(false); // Initially disabled
+
+        // Add mouse listeners for the cards
         cardStackLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("debugMessage");
+                if (!cardsDrawn) {
+                    Dice.generateCards();
+                    cardsDrawn = true;
+                    bigDiceButton.setEnabled(true); // Enable big dice roll
+                } else {
+                    System.out.println("You have already drawn cards this round!");
+                }
             }
 
             @Override
@@ -93,10 +95,18 @@ public class UIHandler {
             }
         });
 
+        // Add mouse listeners for the dice
         diceLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("debugMessage of the Dice");
+                if (cardsDrawn && !dicesRolled) {
+                    Dice.rollDices();
+                    dicesRolled = true;
+                } else if (!cardsDrawn) {
+                    System.out.println("You need to draw cards first!");
+                } else {
+                    System.out.println("You have already rolled dice this round!");
+                }
             }
 
             @Override
@@ -112,10 +122,29 @@ public class UIHandler {
             }
         });
 
-        //Adding elements with Z-index
+        // Add action listener for the big dice button
+        bigDiceButton.addActionListener(e -> {
+            Dice.rollBigDice();
+            bigDiceButton.setEnabled(false); // Disable after rolling
+        });
+
+        // Add a reset button to start the next round
+        JButton resetButton = new JButton("Next Round");
+        resetButton.setBounds(clownX + 350, clownY + 200, 150, 50);
+        resetButton.addActionListener(e -> {
+            cardsDrawn = false;
+            dicesRolled = false;
+            Dice.resetRerolls();
+            bigDiceButton.setEnabled(false);
+            System.out.println("New round started!");
+        });
+
+        // Adding elements with Z-index
         layeredPane.add(evilClownIconLabel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(bloodyTableLabel, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(diceLabel, JLayeredPane.PALETTE_LAYER, 0);
         layeredPane.add(cardStackLabel, JLayeredPane.PALETTE_LAYER, 1);
+        layeredPane.add(bigDiceButton, JLayeredPane.PALETTE_LAYER, 2);
+        layeredPane.add(resetButton, JLayeredPane.PALETTE_LAYER, 3);
     }
 }
